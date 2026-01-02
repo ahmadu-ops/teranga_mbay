@@ -2,12 +2,12 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\DB;
+
 trait OracleModel
 {
     /**
-     * Initialiser le trait pour le modèle.
-     * Cette méthode est appelée automatiquement par le constructeur du Model Eloquent.
-     * Elle permet de surcharger $incrementing sans conflit de définition PHP.
+     * Désactiver l'auto-increment Laravel (géré par séquence Oracle)
      */
     public function initializeOracleModel()
     {
@@ -21,16 +21,36 @@ trait OracleModel
 
     /**
      * Format des dates pour Oracle
-     * (Doit rester public comme vu précédemment)
      */
-    public function getDateFormat()
+    public function getDateFormat(): string
     {
         return 'Y-m-d H:i:s';
     }
 
     /**
-     * Les colonnes de timestamp
+     * Boot du trait - Récupère l'ID de la séquence avant insertion
      */
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+    protected static function bootOracleModel(): void
+    {
+        static::creating(function ($model) {
+            $primaryKey = $model->getKeyName();
+            
+            // Si l'ID n'est pas déjà défini, récupérer depuis la séquence
+            if (empty($model->{$primaryKey})) {
+                $sequenceName = $model->getSequenceName();
+                $result = DB::selectOne("SELECT {$sequenceName}.NEXTVAL as id FROM DUAL");
+                $model->{$primaryKey} = $result->id;
+            }
+        });
+    }
+
+    /**
+     * Récupérer le nom de la séquence pour ce modèle
+     */
+    public function getSequenceName(): string
+    {
+        // Par défaut : seq_ + nom de la table (sans 's' final si pluriel)
+        $table = $this->getTable();
+        return 'seq_' . rtrim($table, 's');
+    }
 }

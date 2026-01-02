@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\OracleModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,11 +19,9 @@ class Vente extends Model
         'quantite_vendu',
         'nom_client',
         'id_variete',
-        // prix_unitaire et montant_total sont calculés par trigger
     ];
 
     protected $casts = [
-        'date_vente' => 'date',
         'quantite_vendu' => 'decimal:2',
         'prix_unitaire' => 'decimal:2',
         'montant_total' => 'decimal:2',
@@ -30,13 +29,31 @@ class Vente extends Model
         'updated_at' => 'datetime',
     ];
 
+    public function getSequenceName(): string
+    {
+        return 'seq_vente';
+    }
+
+    // ========================
+    // MUTATEURS
+    // ========================
+
+    public function setDateVenteAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['date_vente'] = Carbon::parse($value)->format('Y-m-d');
+        }
+    }
+
+    public function getDateVenteAttribute($value)
+    {
+        return $value ? Carbon::parse($value) : null;
+    }
+
     // ========================
     // RELATIONS
     // ========================
 
-    /**
-     * Une vente appartient à une variété
-     */
     public function variete(): BelongsTo
     {
         return $this->belongsTo(Variete::class, 'id_variete', 'id_variete');
@@ -46,33 +63,21 @@ class Vente extends Model
     // ACCESSEURS
     // ========================
 
-    /**
-     * Quantité formatée
-     */
     public function getQuantiteFormateeAttribute(): string
     {
         return number_format($this->quantite_vendu, 2, ',', ' ') . ' kg';
     }
 
-    /**
-     * Montant formaté
-     */
     public function getMontantFormateAttribute(): string
     {
         return number_format($this->montant_total, 0, ',', ' ') . ' FCFA';
     }
 
-    /**
-     * Prix unitaire formaté
-     */
     public function getPrixUnitaireFormateAttribute(): string
     {
         return number_format($this->prix_unitaire, 0, ',', ' ') . ' FCFA/kg';
     }
 
-    /**
-     * Nom du client (ou anonyme)
-     */
     public function getClientAttribute(): string
     {
         return $this->nom_client ?? 'Client anonyme';
@@ -82,58 +87,36 @@ class Vente extends Model
     // SCOPES
     // ========================
 
-    /**
-     * Ventes d'une période
-     */
     public function scopePeriode($query, $dateDebut, $dateFin)
     {
         return $query->whereBetween('date_vente', [$dateDebut, $dateFin]);
     }
 
-    /**
-     * Ventes du jour
-     */
     public function scopeAujourdhui($query)
     {
-        return $query->whereDate('date_vente', now());
+        return $query->whereRaw("TRUNC(date_vente) = TRUNC(SYSDATE)");
     }
 
-    /**
-     * Ventes de la semaine
-     */
     public function scopeCetteSemaine($query)
     {
-        return $query->whereBetween('date_vente', [now()->startOfWeek(), now()->endOfWeek()]);
+        return $query->whereRaw("date_vente >= TRUNC(SYSDATE, 'IW') AND date_vente < TRUNC(SYSDATE, 'IW') + 7");
     }
 
-    /**
-     * Ventes du mois
-     */
     public function scopeCeMois($query)
     {
-        return $query->whereMonth('date_vente', now()->month)
-            ->whereYear('date_vente', now()->year);
+        return $query->whereRaw("TO_CHAR(date_vente, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')");
     }
 
-    /**
-     * Ventes d'une variété
-     */
     public function scopeDeLaVariete($query, int $idVariete)
     {
         return $query->where('id_variete', $idVariete);
     }
 
-    /**
-     * Ventes d'un client
-     */
     public function scopeDuClient($query, string $nomClient)
     {
         return $query->where('nom_client', 'LIKE', '%' . strtoupper($nomClient) . '%');
     }
 
-    /**
-     * Tri par date décroissante
-     */
     public function scopeRecent($query)
     {
         return $query->orderBy('date_vente', 'desc');

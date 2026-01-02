@@ -1,11 +1,207 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+@layer base {
+    body {
+        @apply bg-nuage text-sillon-500 font-sans;
+    }
+}
+
+@layer components {
+    /* Boutons */
+    .btn {
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    }
+    
+    .btn-primary {
+        @apply btn bg-mbay-500 text-white hover:bg-mbay-600 focus:ring-mbay-500;
+    }
+    
+    .btn-secondary {
+        @apply btn bg-sillon-500 text-white hover:bg-sillon-600 focus:ring-sillon-500;
+    }
+    
+    .btn-warning {
+        @apply btn bg-teranga-500 text-sillon-500 hover:bg-teranga-600 focus:ring-teranga-500;
+    }
+    
+    .btn-danger {
+        @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    }
+    
+    .btn-outline {
+        @apply btn border-2 border-mbay-500 text-mbay-500 hover:bg-mbay-500 hover:text-white;
+    }
+
+    /* Cartes */
+    .card {
+        @apply bg-white rounded-xl shadow-sm border border-mbay-100 overflow-hidden;
+    }
+    
+    .card-header {
+        @apply px-6 py-4 border-b border-mbay-100 bg-mbay-50;
+    }
+    
+    .card-body {
+        @apply p-6;
+    }
+
+    /* Formulaires */
+    .form-label {
+        @apply block text-sm font-medium text-sillon-500 mb-1;
+    }
+    
+    .form-input {
+        @apply w-full px-4 py-2 border border-mbay-200 rounded-lg focus:ring-2 focus:ring-mbay-500 focus:border-mbay-500 transition-colors;
+    }
+    
+    .form-select {
+        @apply form-input appearance-none bg-white;
+    }
+    
+    .form-error {
+        @apply text-red-600 text-sm mt-1;
+    }
+
+    /* Tableaux */
+    .table-container {
+        @apply overflow-x-auto rounded-xl border border-mbay-100;
+    }
+    
+    .data-table {
+        @apply w-full text-left;
+    }
+    
+    .data-table thead {
+        @apply bg-mbay-50 border-b border-mbay-100;
+    }
+    
+    .data-table th {
+        @apply px-6 py-3 text-xs font-semibold text-mbay-700 uppercase tracking-wider;
+    }
+    
+    .data-table td {
+        @apply px-6 py-4 text-sm text-sillon-500;
+    }
+    
+    .data-table tbody tr {
+        @apply border-b border-mbay-50 hover:bg-mbay-50 transition-colors;
+    }
+
+    /* KPI Cards */
+    .kpi-card {
+        @apply card p-6 flex items-center space-x-4;
+    }
+    
+    .kpi-icon {
+        @apply w-14 h-14 rounded-xl flex items-center justify-center text-white text-2xl;
+    }
+    
+    .kpi-value {
+        @apply text-2xl font-bold text-sillon-500;
+    }
+    
+    .kpi-label {
+        @apply text-sm text-sillon-400;
+    }
+
+    /* Badges */
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    
+    .badge-success {
+        @apply badge bg-mbay-100 text-mbay-700;
+    }
+    
+    .badge-warning {
+        @apply badge bg-teranga-100 text-teranga-700;
+    }
+    
+    .badge-danger {
+        @apply badge bg-red-100 text-red-700;
+    }
+    
+    .badge-info {
+        @apply badge bg-blue-100 text-blue-700;
+    }
+
+    /* Sidebar */
+    .sidebar-link {
+        @apply flex items-center space-x-3 px-4 py-3 rounded-lg text-sillon-400 hover:bg-mbay-50 hover:text-mbay-600 transition-colors;
+    }
+    
+    .sidebar-link.active {
+        @apply bg-mbay-500 text-white hover:bg-mbay-600 hover:text-white;
+    }
+
+    /* Alertes */
+    .alert {
+        @apply p-4 rounded-lg flex items-center space-x-3;
+    }
+    
+    .alert-success {
+        @apply alert bg-mbay-100 text-mbay-700 border border-mbay-200;
+    }
+    
+    .alert-error {
+        @apply alert bg-red-100 text-red-700 border border-red-200;
+    }
+    
+    .alert-warning {
+        @apply alert bg-teranga-100 text-teranga-700 border border-teranga-200;
+    }
+}
+
+/* ============================================
+   MODALS - Corrections
+   ============================================ */
+
+/* Empêcher le scroll du body quand modal ouvert */
+body:has([x-cloak]:not([style*="display: none"])) {
+    overflow: hidden;
+}
+
+/* Container modal centré */
+.modal-container {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+}
+
+/* Overlay sombre */
+.modal-overlay {
+    @apply fixed inset-0 bg-sillon-500 bg-opacity-75 transition-opacity;
+}
+
+/* Contenu modal avec largeur max */
+.modal-content {
+    @apply relative bg-white rounded-xl shadow-xl w-full mx-auto z-50;
+}
+
+.modal-content-sm {
+    @apply modal-content max-w-sm;
+}
+
+.modal-content-md {
+    @apply modal-content max-w-md;
+}
+
+.modal-content-lg {
+    @apply modal-content max-w-lg;
+}
+
+.modal-content-xl {
+    @apply modal-content max-w-xl;
+}
+
+.modal-content-2xl {
+    @apply modal-content max-w-2xl;
+}
+
+/* Fix pour x-cloak */
+[x-cloak] {
+    display: none !important;
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\PrixRequest;
 use App\Models\Variete;
 use App\Services\VarieteService;
 use App\Services\ProduitService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -45,9 +46,37 @@ class VarieteController extends Controller
             ->with('success', 'Variété créée avec succès.');
     }
 
-    public function show(Variete $variete): View
+    public function show(Variete $variete): View|JsonResponse
     {
         $details = $this->varieteService->getDetails($variete);
+
+        // Si requête AJAX, retourner JSON
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json([
+                'variete' => [
+                    'id_variete' => $variete->id_variete,
+                    'nom_variete' => $variete->nom_variete,
+                    'description' => $variete->description,
+                ],
+                'produit' => [
+                    'id_produit' => $variete->produit->id_produit,
+                    'nom_produit' => $variete->produit->nom_produit,
+                ],
+                'prix_actuel' => $details['prix_actuel'],
+                'historique_prix' => $details['historique_prix']->map(fn($p) => [
+                    'prix_kg' => $p->prix_kg,
+                    'date_debut' => $p->date_debut?->format('d/m/Y'),
+                    'date_fin' => $p->date_fin?->format('d/m/Y'),
+                ]),
+                'total_recolte' => $details['total_recolte'],
+                'total_vendu' => $details['total_vendu'],
+                'total_perdu' => $details['total_perdu'],
+                'stock_disponible' => $details['stock_disponible'],
+                'valeur_stock' => $details['valeur_stock'],
+                'chiffre_affaires' => $details['chiffre_affaires'],
+            ]);
+        }
+
         return view('varietes.show', $details);
     }
 
@@ -87,7 +116,7 @@ class VarieteController extends Controller
         );
 
         return redirect()
-            ->route('varietes.show', $variete)
+            ->route('varietes.index')
             ->with('success', 'Prix mis à jour avec succès.');
     }
 }

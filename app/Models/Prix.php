@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\OracleModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,50 +23,75 @@ class Prix extends Model
 
     protected $casts = [
         'prix_kg' => 'decimal:2',
-        'date_debut' => 'date',
-        'date_fin' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
+    public function getSequenceName(): string
+    {
+        return 'seq_prix';
+    }
+
     // ========================
-    // RELATIONS
+    // MUTATEURS
     // ========================
 
-    /**
-     * Un prix appartient à une variété
-     */
-    public function variete(): BelongsTo
+    public function setDateDebutAttribute($value)
     {
-        return $this->belongsTo(Variete::class, 'id_variete', 'id_variete');
+        if ($value) {
+            $this->attributes['date_debut'] = Carbon::parse($value)->format('Y-m-d');
+        }
+    }
+
+    public function setDateFinAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['date_fin'] = Carbon::parse($value)->format('Y-m-d');
+        } else {
+            $this->attributes['date_fin'] = null;
+        }
     }
 
     // ========================
     // ACCESSEURS
     // ========================
 
-    /**
-     * Prix formaté
-     */
+    public function getDateDebutAttribute($value)
+    {
+        return $value ? Carbon::parse($value) : null;
+    }
+
+    public function getDateFinAttribute($value)
+    {
+        return $value ? Carbon::parse($value) : null;
+    }
+
+    // ========================
+    // RELATIONS
+    // ========================
+
+    public function variete(): BelongsTo
+    {
+        return $this->belongsTo(Variete::class, 'id_variete', 'id_variete');
+    }
+
+    // ========================
+    // AUTRES ACCESSEURS
+    // ========================
+
     public function getPrixFormateAttribute(): string
     {
         return number_format($this->prix_kg, 0, ',', ' ') . ' FCFA/kg';
     }
 
-    /**
-     * Vérifie si le prix est actif
-     */
     public function getEstActifAttribute(): bool
     {
-        return is_null($this->date_fin);
+        return is_null($this->attributes['date_fin'] ?? null);
     }
 
-    /**
-     * Période du prix
-     */
     public function getPeriodeAttribute(): string
     {
-        $debut = $this->date_debut->format('d/m/Y');
+        $debut = $this->date_debut ? $this->date_debut->format('d/m/Y') : '-';
         $fin = $this->date_fin ? $this->date_fin->format('d/m/Y') : 'En cours';
         return "{$debut} → {$fin}";
     }
@@ -74,25 +100,16 @@ class Prix extends Model
     // SCOPES
     // ========================
 
-    /**
-     * Prix actifs uniquement
-     */
     public function scopeActif($query)
     {
         return $query->whereNull('date_fin');
     }
 
-    /**
-     * Historique des prix
-     */
     public function scopeHistorique($query)
     {
         return $query->whereNotNull('date_fin')->orderBy('date_fin', 'desc');
     }
 
-    /**
-     * Prix d'une variété
-     */
     public function scopeDeLaVariete($query, int $idVariete)
     {
         return $query->where('id_variete', $idVariete);

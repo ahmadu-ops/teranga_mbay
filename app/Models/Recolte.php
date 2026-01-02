@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\OracleModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,19 +21,36 @@ class Recolte extends Model
     ];
 
     protected $casts = [
-        'date_recolte' => 'date',
         'quantite_recolte' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
+    public function getSequenceName(): string
+    {
+        return 'seq_recolte';
+    }
+
+    // ========================
+    // MUTATEURS
+    // ========================
+
+    public function setDateRecolteAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['date_recolte'] = Carbon::parse($value)->format('Y-m-d');
+        }
+    }
+
+    public function getDateRecolteAttribute($value)
+    {
+        return $value ? Carbon::parse($value) : null;
+    }
+
     // ========================
     // RELATIONS
     // ========================
 
-    /**
-     * Une récolte appartient à une variété
-     */
     public function variete(): BelongsTo
     {
         return $this->belongsTo(Variete::class, 'id_variete', 'id_variete');
@@ -42,26 +60,17 @@ class Recolte extends Model
     // ACCESSEURS
     // ========================
 
-    /**
-     * Quantité formatée
-     */
     public function getQuantiteFormateeAttribute(): string
     {
         return number_format($this->quantite_recolte, 2, ',', ' ') . ' kg';
     }
 
-    /**
-     * Valeur estimée de la récolte
-     */
     public function getValeurEstimeeAttribute(): float
     {
         $prixActuel = $this->variete->prix_actuel_value ?? 0;
         return $this->quantite_recolte * $prixActuel;
     }
 
-    /**
-     * Valeur formatée
-     */
     public function getValeurFormateeAttribute(): string
     {
         return number_format($this->valeur_estimee, 0, ',', ' ') . ' FCFA';
@@ -71,50 +80,31 @@ class Recolte extends Model
     // SCOPES
     // ========================
 
-    /**
-     * Récoltes d'une période
-     */
     public function scopePeriode($query, $dateDebut, $dateFin)
     {
         return $query->whereBetween('date_recolte', [$dateDebut, $dateFin]);
     }
 
-    /**
-     * Récoltes du jour
-     */
     public function scopeAujourdhui($query)
     {
-        return $query->whereDate('date_recolte', now());
+        return $query->whereRaw("TRUNC(date_recolte) = TRUNC(SYSDATE)");
     }
 
-    /**
-     * Récoltes de la semaine
-     */
     public function scopeCetteSemaine($query)
     {
-        return $query->whereBetween('date_recolte', [now()->startOfWeek(), now()->endOfWeek()]);
+        return $query->whereRaw("date_recolte >= TRUNC(SYSDATE, 'IW') AND date_recolte < TRUNC(SYSDATE, 'IW') + 7");
     }
 
-    /**
-     * Récoltes du mois
-     */
     public function scopeCeMois($query)
     {
-        return $query->whereMonth('date_recolte', now()->month)
-            ->whereYear('date_recolte', now()->year);
+        return $query->whereRaw("TO_CHAR(date_recolte, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')");
     }
 
-    /**
-     * Récoltes d'une variété
-     */
     public function scopeDeLaVariete($query, int $idVariete)
     {
         return $query->where('id_variete', $idVariete);
     }
 
-    /**
-     * Tri par date décroissante
-     */
     public function scopeRecent($query)
     {
         return $query->orderBy('date_recolte', 'desc');

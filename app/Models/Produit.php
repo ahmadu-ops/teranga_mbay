@@ -22,13 +22,18 @@ class Produit extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * Nom de la séquence Oracle
+     */
+    public function getSequenceName(): string
+    {
+        return 'seq_produit';
+    }
+
     // ========================
     // RELATIONS
     // ========================
 
-    /**
-     * Un produit a plusieurs variétés
-     */
     public function varietes(): HasMany
     {
         return $this->hasMany(Variete::class, 'id_produit', 'id_produit');
@@ -38,17 +43,11 @@ class Produit extends Model
     // ACCESSEURS
     // ========================
 
-    /**
-     * Nombre de variétés
-     */
     public function getNombreVarietesAttribute(): int
     {
         return $this->varietes()->count();
     }
 
-    /**
-     * Stock total du produit (toutes variétés confondues)
-     */
     public function getStockTotalAttribute(): float
     {
         return $this->varietes->sum(function ($variete) {
@@ -60,25 +59,6 @@ class Produit extends Model
     // SCOPES
     // ========================
 
-    /**
-     * Produits avec stock disponible
-     */
-    public function scopeAvecStock($query)
-    {
-        return $query->whereHas('varietes', function ($q) {
-            $q->whereRaw('(
-                SELECT NVL(SUM(r.quantite_recolte), 0) - NVL(SUM(v.quantite_vendu), 0) - NVL(SUM(p.quantite_perdue), 0)
-                FROM recolte r
-                LEFT JOIN vente v ON r.id_variete = v.id_variete
-                LEFT JOIN perte p ON r.id_variete = p.id_variete
-                WHERE r.id_variete = variete.id_variete
-            ) > 0');
-        });
-    }
-
-    /**
-     * Recherche par nom
-     */
     public function scopeRecherche($query, string $terme)
     {
         return $query->where('nom_produit', 'LIKE', '%' . strtoupper($terme) . '%');

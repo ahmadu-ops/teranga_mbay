@@ -6,6 +6,7 @@ use App\Http\Requests\RecolteRequest;
 use App\Models\Recolte;
 use App\Services\RecolteService;
 use App\Services\VarieteService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -49,9 +50,30 @@ class RecolteController extends Controller
             ->with('success', 'Récolte enregistrée avec succès.');
     }
 
-    public function show(Recolte $recolte): View
+    public function show(Recolte $recolte): View|JsonResponse
     {
         $recolte = $this->recolteService->find($recolte->id_recolte);
+
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json([
+                'id_recolte' => $recolte->id_recolte,
+                'date_recolte' => $recolte->date_recolte->format('d/m/Y'),
+                'date_recolte_raw' => $recolte->date_recolte->format('Y-m-d'),
+                'quantite_recolte' => (float) $recolte->quantite_recolte,
+                'id_variete' => $recolte->id_variete,
+                'variete' => [
+                    'id_variete' => $recolte->variete->id_variete,
+                    'nom_variete' => $recolte->variete->nom_variete,
+                ],
+                'produit' => [
+                    'id_produit' => $recolte->variete->produit->id_produit,
+                    'nom_produit' => $recolte->variete->produit->nom_produit,
+                ],
+                'prix_unitaire' => $recolte->variete->prix_actuel_value ?? 0,
+                'valeur_estimee' => $recolte->valeur_estimee,
+            ]);
+        }
+
         return view('recoltes.show', compact('recolte'));
     }
 
