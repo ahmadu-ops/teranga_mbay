@@ -6,6 +6,7 @@ use App\Http\Requests\VenteRequest;
 use App\Models\Vente;
 use App\Services\VenteService;
 use App\Services\VarieteService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -25,8 +26,8 @@ class VenteController extends Controller
             dateDebut: $request->get('date_debut'),
             dateFin: $request->get('date_fin'),
             client: $request->get('client')
-        );
-        $varietes = $this->varieteService->avecStock();
+        );  
+        $varietes = $this->varieteService->all();
         $clients = $this->venteService->getClients();
         $stats = $this->venteService->getStats(
             $request->get('date_debut'),
@@ -57,15 +58,37 @@ class VenteController extends Controller
         }
     }
 
-    public function show(Vente $vente): View
+    public function show(Vente $vente): View|JsonResponse
     {
         $vente = $this->venteService->find($vente->id_vente);
+
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json([
+                'id_vente' => $vente->id_vente,
+                'date_vente' => $vente->date_vente->format('d/m/Y'),
+                'date_vente_raw' => $vente->date_vente->format('Y-m-d'),
+                'quantite_vendu' => (float) $vente->quantite_vendu,
+                'prix_unitaire' => (float) $vente->prix_unitaire,
+                'montant_total' => (float) $vente->montant_total,
+                'nom_client' => $vente->nom_client,
+                'id_variete' => $vente->id_variete,
+                'variete' => [
+                    'id_variete' => $vente->variete->id_variete,
+                    'nom_variete' => $vente->variete->nom_variete,
+                ],
+                'produit' => [
+                    'id_produit' => $vente->variete->produit->id_produit,
+                    'nom_produit' => $vente->variete->produit->nom_produit,
+                ],
+            ]);
+        }
+
         return view('ventes.show', compact('vente'));
     }
 
     public function edit(Vente $vente): View
     {
-        $varietes = $this->varieteService->avecStock();
+        $varietes = $this->varieteService->all();
         return view('ventes.edit', compact('vente', 'varietes'));
     }
 

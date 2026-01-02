@@ -37,8 +37,12 @@ class Recolte extends Model
 
     public function setDateRecolteAttribute($value)
     {
-        if ($value) {
+        if ($value instanceof Carbon) {
+            $this->attributes['date_recolte'] = $value->format('Y-m-d');
+        } elseif ($value) {
             $this->attributes['date_recolte'] = Carbon::parse($value)->format('Y-m-d');
+        } else {
+            $this->attributes['date_recolte'] = null;
         }
     }
 

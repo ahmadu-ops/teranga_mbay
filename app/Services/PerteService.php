@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Perte;
 use App\Models\Variete;
+use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -55,8 +56,11 @@ class PerteService
             throw new \Exception("Stock insuffisant pour enregistrer cette perte. Disponible: {$variete->stock_disponible} kg");
         }
 
+        // Formater la date
+        $datePerte = Carbon::parse($data['date_perte'])->format('Y-m-d');
+
         return Perte::create([
-            'date_perte' => $data['date_perte'],
+            'date_perte' => $datePerte,
             'quantite_perdue' => $data['quantite_perdue'],
             'motif_perte' => $data['motif_perte'],
             'id_variete' => $data['id_variete'],
@@ -68,8 +72,11 @@ class PerteService
      */
     public function update(Perte $perte, array $data): Perte
     {
+        // Formater la date
+        $datePerte = Carbon::parse($data['date_perte'])->format('Y-m-d');
+
         $perte->update([
-            'date_perte' => $data['date_perte'],
+            'date_perte' => $datePerte,
             'quantite_perdue' => $data['quantite_perdue'],
             'motif_perte' => $data['motif_perte'],
             'id_variete' => $data['id_variete'],
@@ -98,8 +105,8 @@ class PerteService
         }
 
         return [
-            'total_kg' => $query->sum('quantite_perdue'),
-            'valeur_totale' => $query->sum('valeur_estimee'),
+            'total_kg' => $query->sum('quantite_perdue') ?? 0,
+            'valeur_totale' => $query->sum('valeur_estimee') ?? 0,
             'nombre_pertes' => $query->count(),
         ];
     }

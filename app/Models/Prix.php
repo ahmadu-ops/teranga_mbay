@@ -38,14 +38,20 @@ class Prix extends Model
 
     public function setDateDebutAttribute($value)
     {
-        if ($value) {
+        if ($value instanceof Carbon) {
+            $this->attributes['date_debut'] = $value->format('Y-m-d');
+        } elseif ($value) {
             $this->attributes['date_debut'] = Carbon::parse($value)->format('Y-m-d');
+        } else {
+            $this->attributes['date_debut'] = null;
         }
     }
 
     public function setDateFinAttribute($value)
     {
-        if ($value) {
+        if ($value instanceof Carbon) {
+            $this->attributes['date_fin'] = $value->format('Y-m-d');
+        } elseif ($value) {
             $this->attributes['date_fin'] = Carbon::parse($value)->format('Y-m-d');
         } else {
             $this->attributes['date_fin'] = null;

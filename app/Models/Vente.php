@@ -40,8 +40,12 @@ class Vente extends Model
 
     public function setDateVenteAttribute($value)
     {
-        if ($value) {
+        if ($value instanceof Carbon) {
+            $this->attributes['date_vente'] = $value->format('Y-m-d');
+        } elseif ($value) {
             $this->attributes['date_vente'] = Carbon::parse($value)->format('Y-m-d');
+        } else {
+            $this->attributes['date_vente'] = null;
         }
     }
 
