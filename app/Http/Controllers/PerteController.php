@@ -35,14 +35,14 @@ class PerteController extends Controller
         );
         $statsParMotif = $this->perteService->getStatsParMotif();
 
-        return view('pertes.index', compact('pertes', 'varietes', 'motifs', 'stats', 'statsParMotif'));
+        $openCreateModal = $request->has('create');
+
+        return view('pertes.index', compact('pertes', 'varietes', 'motifs', 'stats', 'statsParMotif', 'openCreateModal'));
     }
 
-    public function create(): View
+    public function create(): RedirectResponse
     {
-        $varietes = $this->varieteService->avecStock();
-        $motifs = $this->perteService->getMotifs();
-        return view('pertes.create', compact('varietes', 'motifs'));
+        return redirect()->route('pertes.index', ['create' => 1]);
     }
 
     public function store(PerteRequest $request): RedirectResponse
@@ -88,11 +88,9 @@ class PerteController extends Controller
         return view('pertes.show', compact('perte'));
     }
 
-    public function edit(Perte $perte): View
+    public function edit(Perte $perte): RedirectResponse
     {
-        $varietes = $this->varieteService->all();
-        $motifs = $this->perteService->getMotifs();
-        return view('pertes.edit', compact('perte', 'varietes', 'motifs'));
+        return redirect()->route('pertes.index', ['edit' => $perte->id_perte]);
     }
 
     public function update(PerteRequest $request, Perte $perte): RedirectResponse

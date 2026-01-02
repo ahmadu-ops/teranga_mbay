@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<div x-data="produitsManager()" x-cloak>
+<div x-data="produitsManager({{ $openCreateModal ? 'true' : 'false' }})" x-cloak>
     
     <!-- Barre d'actions -->
     <div class="card mb-6">
@@ -520,10 +520,10 @@
 
 @push('scripts')
 <script>
-function produitsManager() {
+function produitsManager(autoOpenCreate = false) {
     return {
         // Create Modal
-        showCreateModal: false,
+        showCreateModal: autoOpenCreate,
         
         // Edit Modal
         showEditModal: false,

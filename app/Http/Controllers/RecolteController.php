@@ -32,13 +32,14 @@ class RecolteController extends Controller
             $request->get('date_fin')
         );
 
-        return view('recoltes.index', compact('recoltes', 'varietes', 'stats'));
+        $openCreateModal = $request->has('create');
+
+        return view('recoltes.index', compact('recoltes', 'varietes', 'stats', 'openCreateModal'));
     }
 
-    public function create(): View
+    public function create(): RedirectResponse
     {
-        $varietes = $this->varieteService->all();
-        return view('recoltes.create', compact('varietes'));
+        return redirect()->route('recoltes.index', ['create' => 1]);
     }
 
     public function store(RecolteRequest $request): RedirectResponse
@@ -77,10 +78,9 @@ class RecolteController extends Controller
         return view('recoltes.show', compact('recolte'));
     }
 
-    public function edit(Recolte $recolte): View
+    public function edit(Recolte $recolte): RedirectResponse
     {
-        $varietes = $this->varieteService->all();
-        return view('recoltes.edit', compact('recolte', 'varietes'));
+        return redirect()->route('recoltes.index', ['edit' => $recolte->id_recolte]);
     }
 
     public function update(RecolteRequest $request, Recolte $recolte): RedirectResponse

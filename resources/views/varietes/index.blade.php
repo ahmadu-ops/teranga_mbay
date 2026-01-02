@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<div x-data="varietesManager()" x-cloak>
+<div x-data="varietesManager({{ $openCreateModal ? 'true' : 'false' }})" x-cloak>
     
     <!-- Barre d'actions -->
     <div class="card mb-6">
@@ -697,9 +697,9 @@
 
 @push('scripts')
 <script>
-function varietesManager() {
+function varietesManager(autoOpenCreate = false) {
     return {
-        showCreateModal: false,
+        showCreateModal: autoOpenCreate,
         showEditModal: false,
         editData: { id: null, nom_variete: '', description: '', id_produit: '' },
         editFormAction: '',

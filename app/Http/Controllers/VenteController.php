@@ -26,7 +26,7 @@ class VenteController extends Controller
             dateDebut: $request->get('date_debut'),
             dateFin: $request->get('date_fin'),
             client: $request->get('client')
-        );  
+        );
         $varietes = $this->varieteService->all();
         $clients = $this->venteService->getClients();
         $stats = $this->venteService->getStats(
@@ -34,13 +34,14 @@ class VenteController extends Controller
             $request->get('date_fin')
         );
 
-        return view('ventes.index', compact('ventes', 'varietes', 'clients', 'stats'));
+        $openCreateModal = $request->has('create');
+
+        return view('ventes.index', compact('ventes', 'varietes', 'clients', 'stats', 'openCreateModal'));
     }
 
-    public function create(): View
+    public function create(): RedirectResponse
     {
-        $varietes = $this->varieteService->avecStock();
-        return view('ventes.create', compact('varietes'));
+        return redirect()->route('ventes.index', ['create' => 1]);
     }
 
     public function store(VenteRequest $request): RedirectResponse
@@ -86,10 +87,9 @@ class VenteController extends Controller
         return view('ventes.show', compact('vente'));
     }
 
-    public function edit(Vente $vente): View
+    public function edit(Vente $vente): RedirectResponse
     {
-        $varietes = $this->varieteService->all();
-        return view('ventes.edit', compact('vente', 'varietes'));
+        return redirect()->route('ventes.index', ['edit' => $vente->id_vente]);
     }
 
     public function update(VenteRequest $request, Vente $vente): RedirectResponse

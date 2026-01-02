@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProduitRequest;
 use App\Models\Produit;
 use App\Services\ProduitService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 
 class ProduitController extends Controller
 {
@@ -23,12 +23,15 @@ class ProduitController extends Controller
             recherche: $request->get('recherche')
         );
 
-        return view('produits.index', compact('produits'));
+        // Flag pour ouvrir le modal automatiquement
+        $openCreateModal = $request->has('create');
+
+        return view('produits.index', compact('produits', 'openCreateModal'));
     }
 
-    public function create(): View
+    public function create(): RedirectResponse
     {
-        return view('produits.create');
+        return redirect()->route('produits.index', ['create' => 1]);
     }
 
     public function store(ProduitRequest $request): RedirectResponse
@@ -45,7 +48,6 @@ class ProduitController extends Controller
         $produit = $this->produitService->find($produit->id_produit);
         $stats = $this->produitService->getStats($produit);
 
-        // Si requête AJAX, retourner JSON
         if (request()->ajax() || request()->wantsJson()) {
             return response()->json([
                 'id_produit' => $produit->id_produit,
@@ -64,9 +66,9 @@ class ProduitController extends Controller
         return view('produits.show', compact('produit', 'stats'));
     }
 
-    public function edit(Produit $produit): View
+    public function edit(Produit $produit): RedirectResponse
     {
-        return view('produits.edit', compact('produit'));
+        return redirect()->route('produits.index', ['edit' => $produit->id_produit]);
     }
 
     public function update(ProduitRequest $request, Produit $produit): RedirectResponse

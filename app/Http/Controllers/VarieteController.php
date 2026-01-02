@@ -28,13 +28,14 @@ class VarieteController extends Controller
         );
         $produits = $this->produitService->all();
 
-        return view('varietes.index', compact('varietes', 'produits'));
+        $openCreateModal = $request->has('create');
+
+        return view('varietes.index', compact('varietes', 'produits', 'openCreateModal'));
     }
 
-    public function create(): View
+    public function create(): RedirectResponse
     {
-        $produits = $this->produitService->all();
-        return view('varietes.create', compact('produits'));
+        return redirect()->route('varietes.index', ['create' => 1]);
     }
 
     public function store(VarieteRequest $request): RedirectResponse
@@ -50,7 +51,6 @@ class VarieteController extends Controller
     {
         $details = $this->varieteService->getDetails($variete);
 
-        // Si requête AJAX, retourner JSON
         if (request()->ajax() || request()->wantsJson()) {
             return response()->json([
                 'variete' => [
@@ -80,10 +80,9 @@ class VarieteController extends Controller
         return view('varietes.show', $details);
     }
 
-    public function edit(Variete $variete): View
+    public function edit(Variete $variete): RedirectResponse
     {
-        $produits = $this->produitService->all();
-        return view('varietes.edit', compact('variete', 'produits'));
+        return redirect()->route('varietes.index', ['edit' => $variete->id_variete]);
     }
 
     public function update(VarieteRequest $request, Variete $variete): RedirectResponse
@@ -104,9 +103,6 @@ class VarieteController extends Controller
             ->with('success', 'Variété supprimée avec succès.');
     }
 
-    /**
-     * Mettre à jour le prix
-     */
     public function updatePrix(PrixRequest $request, Variete $variete): RedirectResponse
     {
         $this->varieteService->updatePrix(

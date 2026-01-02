@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<div x-data="ventesManager()" x-cloak>
+<div x-data="ventesManager({{ $openCreateModal ? 'true' : 'false' }})" x-cloak>
     
     <!-- Stats rapides -->
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
@@ -691,10 +691,10 @@
 
 @push('scripts')
 <script>
-function ventesManager() {
+function ventesManager(autoOpenCreate = false) {
     return {
         // Create
-        showCreateModal: false,
+        showCreateModal: autoOpenCreate,
         createVarieteId: '',
         createQuantite: 0,
         stockDisponible: 0,

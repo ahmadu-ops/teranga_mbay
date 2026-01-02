@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<div x-data="pertesManager()" x-cloak>
+<div x-data="pertesManager({{ $openCreateModal ? 'true' : 'false' }})" x-cloak>
     
     <!-- Stats rapides -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -718,10 +718,10 @@
 
 @push('scripts')
 <script>
-function pertesManager() {
+function pertesManager(autoOpenCreate = false) {
     return {
         // Create
-        showCreateModal: false,
+        showCreateModal: autoOpenCreate,
         createVarieteId: '',
         createQuantite: 0,
         stockDisponible: 0,

@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<div x-data="recoltesManager()" x-cloak>
+<div x-data="recoltesManager({{ $openCreateModal ? 'true' : 'false' }})" x-cloak>
     
     <!-- Stats rapides -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -591,9 +591,9 @@
 
 @push('scripts')
 <script>
-function recoltesManager() {
+function recoltesManager(autoOpenCreate = false) {
     return {
-        showCreateModal: false,
+        showCreateModal: autoOpenCreate,
         showEditModal: false,
         editData: { id: null, date_recolte: '', quantite_recolte: '', id_variete: '' },
         editFormAction: '',
