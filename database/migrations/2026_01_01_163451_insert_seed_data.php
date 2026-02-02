@@ -7,14 +7,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // PRODUITS
+        // ============================================================
+        // PRODUITS (8 produits)
+        // ============================================================
         $produits = ['Chou', 'Carotte', 'Oignon', 'Aubergine', 'Piment', 'Tomate', 'Pomme de terre', 'Concombre'];
         foreach ($produits as $produit) {
             DB::table('produit')->insert(['nom_produit' => $produit]);
         }
 
-        // VARIETES
+        // ============================================================
+        // VARIETES (40+ variétés au lieu de 19)
+        // ============================================================
         $varietes = [
+            // Choux (12 variétés)
             ['nom' => 'Chou vert', 'desc' => 'Chou classique pour salades', 'produit' => 1],
             ['nom' => 'Chou rouge', 'desc' => 'Riche en antioxydants', 'produit' => 1],
             ['nom' => 'Chou-fleur', 'desc' => 'Bouquets blancs populaires', 'produit' => 1],
@@ -22,19 +27,60 @@ return new class extends Migration
             ['nom' => 'Chou de Bruxelles', 'desc' => 'Bourgeons comestibles', 'produit' => 1],
             ['nom' => 'Chou romanesco', 'desc' => 'Forme spirale, texture croquante', 'produit' => 1],
             ['nom' => 'Chou chinois', 'desc' => 'Pak-choi, cuisine asiatique', 'produit' => 1],
-            ['nom' => 'Carotte nantaise', 'desc' => 'Carotte douce et sucree', 'produit' => 2],
+            ['nom' => 'Chou kale', 'desc' => 'Superfood riche en nutriments', 'produit' => 1],
+            ['nom' => 'Chou frisé', 'desc' => 'Feuilles ondulées', 'produit' => 1],
+            ['nom' => 'Chou blanc', 'desc' => 'Pour choucroute', 'produit' => 1],
+            ['nom' => 'Chou rave', 'desc' => 'Tubercule croquant', 'produit' => 1],
+            ['nom' => 'Chou pointu', 'desc' => 'Forme conique', 'produit' => 1],
+            
+            // Carottes (6 variétés)
+            ['nom' => 'Carotte nantaise', 'desc' => 'Carotte douce et sucrée', 'produit' => 2],
             ['nom' => 'Carotte violette', 'desc' => 'Riche en anthocyanes', 'produit' => 2],
+            ['nom' => 'Carotte jaune', 'desc' => 'Saveur douce', 'produit' => 2],
+            ['nom' => 'Carotte blanche', 'desc' => 'Ancienne variété', 'produit' => 2],
+            ['nom' => 'Carotte rouge', 'desc' => 'Très colorée', 'produit' => 2],
+            ['nom' => 'Carotte mini', 'desc' => 'Format snack', 'produit' => 2],
+            
+            // Oignons (5 variétés)
             ['nom' => 'Oignon rouge', 'desc' => 'Saveur douce', 'produit' => 3],
             ['nom' => 'Oignon jaune', 'desc' => 'Oignon classique', 'produit' => 3],
-            ['nom' => 'Aubergine noire', 'desc' => 'Variete classique', 'produit' => 4],
+            ['nom' => 'Oignon blanc', 'desc' => 'Doux et croquant', 'produit' => 3],
+            ['nom' => 'Echalote', 'desc' => 'Saveur subtile', 'produit' => 3],
+            ['nom' => 'Oignon vert', 'desc' => 'Ciboulette chinoise', 'produit' => 3],
+            
+            // Aubergines (4 variétés)
+            ['nom' => 'Aubergine noire', 'desc' => 'Variété classique', 'produit' => 4],
             ['nom' => 'Aubergine Thai', 'desc' => 'Petite aubergine verte', 'produit' => 4],
-            ['nom' => 'Piment antillais', 'desc' => 'Tres piquant', 'produit' => 5],
-            ['nom' => 'Piment doux', 'desc' => 'Saveur fruitee', 'produit' => 5],
-            ['nom' => 'Tomate cerise', 'desc' => 'Petite et sucree', 'produit' => 6],
+            ['nom' => 'Aubergine blanche', 'desc' => 'Douce et crémeuse', 'produit' => 4],
+            ['nom' => 'Aubergine longue', 'desc' => 'Format allongé', 'produit' => 4],
+            
+            // Piments (5 variétés)
+            ['nom' => 'Piment antillais', 'desc' => 'Très piquant', 'produit' => 5],
+            ['nom' => 'Piment doux', 'desc' => 'Saveur fruitée', 'produit' => 5],
+            ['nom' => 'Piment jalapeño', 'desc' => 'Piquant moyen', 'produit' => 5],
+            ['nom' => 'Piment de cayenne', 'desc' => 'Très fort', 'produit' => 5],
+            ['nom' => 'Poivron vert', 'desc' => 'Doux et croquant', 'produit' => 5],
+            
+            // Tomates (6 variétés)
+            ['nom' => 'Tomate cerise', 'desc' => 'Petite et sucrée', 'produit' => 6],
             ['nom' => 'Tomate coeur de boeuf', 'desc' => 'Grosse tomate charnue', 'produit' => 6],
+            ['nom' => 'Tomate roma', 'desc' => 'Pour sauce', 'produit' => 6],
+            ['nom' => 'Tomate cocktail', 'desc' => 'Moyenne et sucrée', 'produit' => 6],
+            ['nom' => 'Tomate noire', 'desc' => 'Saveur complexe', 'produit' => 6],
+            ['nom' => 'Tomate grappe', 'desc' => 'Parfumée', 'produit' => 6],
+            
+            // Pommes de terre (4 variétés)
             ['nom' => 'Pomme de terre Roseval', 'desc' => 'Peau rose, chair jaune', 'produit' => 7],
-            ['nom' => 'Concombre classique', 'desc' => 'Long et vert fonce', 'produit' => 8],
+            ['nom' => 'Pomme de terre Bintje', 'desc' => 'Pour frites', 'produit' => 7],
+            ['nom' => 'Pomme de terre Charlotte', 'desc' => 'Chair ferme', 'produit' => 7],
+            ['nom' => 'Pomme de terre Agata', 'desc' => 'Polyvalente', 'produit' => 7],
+            
+            // Concombres (3 variétés)
+            ['nom' => 'Concombre classique', 'desc' => 'Long et vert foncé', 'produit' => 8],
+            ['nom' => 'Concombre libanais', 'desc' => 'Mini et croquant', 'produit' => 8],
+            ['nom' => 'Cornichon', 'desc' => 'Pour conserves', 'produit' => 8],
         ];
+        
         foreach ($varietes as $v) {
             DB::table('variete')->insert([
                 'nom_variete' => $v['nom'],
@@ -43,13 +89,29 @@ return new class extends Migration
             ]);
         }
 
-        // PRIX (FCFA/kg)
+        // ============================================================
+        // PRIX (FCFA/kg) - Les triggers gèrent l'auto-increment
+        // ============================================================
         $prix = [
-            1 => 400, 2 => 500, 3 => 600, 4 => 650, 5 => 700,
-            6 => 750, 7 => 550, 8 => 300, 9 => 350, 10 => 250,
-            11 => 200, 12 => 800, 13 => 450, 14 => 1200, 15 => 900,
-            16 => 500, 17 => 700, 18 => 350, 19 => 300
+            // Choux (id 1-12)
+            1 => 400, 2 => 500, 3 => 600, 4 => 650, 5 => 700, 6 => 750,
+            7 => 550, 8 => 600, 9 => 450, 10 => 400, 11 => 500, 12 => 480,
+            // Carottes (id 13-18)
+            13 => 300, 14 => 350, 15 => 320, 16 => 310, 17 => 340, 18 => 280,
+            // Oignons (id 19-23)
+            19 => 250, 20 => 200, 21 => 230, 22 => 280, 23 => 240,
+            // Aubergines (id 24-27)
+            24 => 800, 25 => 450, 26 => 750, 27 => 820,
+            // Piments (id 28-32)
+            28 => 1200, 29 => 900, 30 => 1100, 31 => 1300, 32 => 600,
+            // Tomates (id 33-38)
+            33 => 500, 34 => 700, 35 => 550, 36 => 520, 37 => 650, 38 => 580,
+            // Pommes de terre (id 39-42)
+            39 => 350, 40 => 320, 41 => 380, 42 => 340,
+            // Concombres (id 43-45)
+            43 => 300, 44 => 350, 45 => 280,
         ];
+        
         foreach ($prix as $idVariete => $prixKg) {
             DB::table('prix')->insert([
                 'prix_kg' => $prixKg,
@@ -59,28 +121,33 @@ return new class extends Migration
             ]);
         }
 
-        // RECOLTES
-        $recoltes = [
-            ['date' => '2025-01-15', 'qte' => 150.5, 'variete' => 1],
-            ['date' => '2025-01-16', 'qte' => 120.0, 'variete' => 2],
-            ['date' => '2025-01-17', 'qte' => 95.5, 'variete' => 3],
-            ['date' => '2025-01-18', 'qte' => 80.0, 'variete' => 4],
-            ['date' => '2025-01-19', 'qte' => 60.0, 'variete' => 5],
-            ['date' => '2025-01-20', 'qte' => 75.0, 'variete' => 6],
-            ['date' => '2025-01-21', 'qte' => 88.5, 'variete' => 7],
-            ['date' => '2025-01-22', 'qte' => 200.0, 'variete' => 8],
-            ['date' => '2025-01-23', 'qte' => 180.0, 'variete' => 9],
-            ['date' => '2025-01-24', 'qte' => 250.0, 'variete' => 10],
-            ['date' => '2025-01-25', 'qte' => 300.0, 'variete' => 11],
-            ['date' => '2025-01-26', 'qte' => 70.0, 'variete' => 12],
-            ['date' => '2025-01-27', 'qte' => 55.0, 'variete' => 13],
-            ['date' => '2025-01-28', 'qte' => 40.0, 'variete' => 14],
-            ['date' => '2025-01-29', 'qte' => 45.0, 'variete' => 15],
-            ['date' => '2025-01-30', 'qte' => 160.0, 'variete' => 16],
-            ['date' => '2025-01-31', 'qte' => 140.0, 'variete' => 17],
-            ['date' => '2025-02-01', 'qte' => 280.0, 'variete' => 18],
-            ['date' => '2025-02-02', 'qte' => 220.0, 'variete' => 19],
-        ];
+        // ============================================================
+        // RECOLTES (100+ entrées sur janvier-février 2025)
+        // ============================================================
+        $recoltes = [];
+        $dateDebut = new DateTime('2025-01-05');
+        
+        // Génération de récoltes variées
+        for ($i = 0; $i < 60; $i++) {
+            $date = clone $dateDebut;
+            $date->modify("+{$i} days");
+            
+            // 3-5 variétés récoltées par jour
+            $nbVarietes = rand(3, 5);
+            $varietesChoisies = array_rand(range(1, 45), $nbVarietes);
+            
+            foreach ($varietesChoisies as $idVariete) {
+                $idVariete = $idVariete + 1; // Ajustement index
+                $quantite = rand(30, 400) + (rand(0, 9) * 0.5); // 30-400 kg avec décimales
+                
+                $recoltes[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'qte' => $quantite,
+                    'variete' => $idVariete
+                ];
+            }
+        }
+        
         foreach ($recoltes as $r) {
             DB::table('recolte')->insert([
                 'date_recolte' => $r['date'],
@@ -89,54 +156,101 @@ return new class extends Migration
             ]);
         }
 
-        // VENTES
-        $ventes = [
-            ['date' => '2025-01-16', 'qte' => 50.0, 'client' => 'Mamadou Diallo', 'variete' => 1],
-            ['date' => '2025-01-17', 'qte' => 40.0, 'client' => 'Awa Ndiaye', 'variete' => 2],
-            ['date' => '2025-01-18', 'qte' => 35.0, 'client' => 'Cheikh Fall', 'variete' => 3],
-            ['date' => '2025-01-19', 'qte' => 30.0, 'client' => 'Fatou Sow', 'variete' => 4],
-            ['date' => '2025-01-20', 'qte' => 25.0, 'client' => 'Ousmane Ba', 'variete' => 5],
-            ['date' => '2025-01-21', 'qte' => 45.0, 'client' => 'Ibrahima Kane', 'variete' => 6],
-            ['date' => '2025-01-22', 'qte' => 55.0, 'client' => 'Khady Faye', 'variete' => 7],
-            ['date' => '2025-01-23', 'qte' => 100.0, 'client' => 'Serigne Sarr', 'variete' => 8],
-            ['date' => '2025-01-24', 'qte' => 90.0, 'client' => 'Sokhna Mbaye', 'variete' => 9],
-            ['date' => '2025-01-25', 'qte' => 120.0, 'client' => 'Abdoulaye Diop', 'variete' => 10],
-            ['date' => '2025-01-26', 'qte' => 150.0, 'client' => 'Modou Gueye', 'variete' => 11],
-            ['date' => '2025-01-27', 'qte' => 35.0, 'client' => 'Aminata Diaw', 'variete' => 12],
-            ['date' => '2025-01-28', 'qte' => 25.0, 'client' => 'Moussa Seck', 'variete' => 13],
-            ['date' => '2025-01-29', 'qte' => 20.0, 'client' => 'Ndeye Fatou', 'variete' => 14],
-            ['date' => '2025-01-30', 'qte' => 22.0, 'client' => 'Babacar Niang', 'variete' => 15],
+        // ============================================================
+        // VENTES (150+ entrées)
+        // Les triggers calculent automatiquement prix_unitaire et montant_total
+        // et vérifient le stock disponible
+        // ============================================================
+        $clients = [
+            'Mamadou Diallo', 'Awa Ndiaye', 'Cheikh Fall', 'Fatou Sow',
+            'Ousmane Ba', 'Ibrahima Kane', 'Khady Faye', 'Serigne Sarr',
+            'Sokhna Mbaye', 'Abdoulaye Diop', 'Modou Gueye', 'Aminata Diaw',
+            'Moussa Seck', 'Ndeye Fatou', 'Babacar Niang', 'Aissatou Cisse',
+            'Lamine Sall', 'Mariama Thiam', 'Youssou Ndour', 'Binta Sow',
+            'Daouda Wade', 'Rama Sy', 'Malick Faye', 'Coumba Diop'
         ];
+        
+        $ventes = [];
+        $dateDebut = new DateTime('2025-01-06');
+        
+        for ($i = 0; $i < 80; $i++) {
+            $date = clone $dateDebut;
+            $date->modify("+{$i} days");
+            
+            // 2-4 ventes par jour
+            $nbVentes = rand(2, 4);
+            
+            for ($j = 0; $j < $nbVentes; $j++) {
+                $idVariete = rand(1, 45);
+                $quantite = rand(10, 150) + (rand(0, 9) * 0.5);
+                $client = $clients[array_rand($clients)];
+                
+                $ventes[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'qte' => $quantite,
+                    'client' => $client,
+                    'variete' => $idVariete
+                ];
+            }
+        }
+        
         foreach ($ventes as $v) {
-            DB::table('vente')->insert([
-                'date_vente' => $v['date'],
-                'quantite_vendu' => $v['qte'],
-                'prix_unitaire' => 0,
-                'montant_total' => 0,
-                'nom_client' => $v['client'],
-                'id_variete' => $v['variete']
-            ]);
+            try {
+                DB::table('vente')->insert([
+                    'date_vente' => $v['date'],
+                    'quantite_vendu' => $v['qte'],
+                    'prix_unitaire' => 0, // Calculé par trigger
+                    'montant_total' => 0, // Calculé par trigger
+                    'nom_client' => $v['client'],
+                    'id_variete' => $v['variete']
+                ]);
+            } catch (\Exception $e) {
+                // Skip si stock insuffisant (trigger validation)
+                continue;
+            }
         }
 
-        // PERTES
-        $pertes = [
-            ['date' => '2025-01-20', 'qte' => 5.0, 'motif' => 'Pourriture', 'variete' => 1],
-            ['date' => '2025-01-21', 'qte' => 3.5, 'motif' => 'Vol', 'variete' => 2],
-            ['date' => '2025-01-22', 'qte' => 4.0, 'motif' => 'Accident', 'variete' => 3],
-            ['date' => '2025-01-23', 'qte' => 2.5, 'motif' => 'Pourriture', 'variete' => 4],
-            ['date' => '2025-01-24', 'qte' => 8.0, 'motif' => 'Invendu', 'variete' => 8],
-            ['date' => '2025-01-25', 'qte' => 6.0, 'motif' => 'Invendu', 'variete' => 9],
-            ['date' => '2025-01-26', 'qte' => 10.0, 'motif' => 'Pourriture', 'variete' => 10],
-            ['date' => '2025-01-27', 'qte' => 5.0, 'motif' => 'Accident', 'variete' => 11],
-        ];
+        // ============================================================
+        // PERTES (40+ entrées)
+        // Les triggers calculent automatiquement valeur_estimee
+        // et vérifient la cohérence avec le stock
+        // ============================================================
+        $motifs = ['Pourriture', 'Vol', 'Accident', 'Invendu', 'Insectes', 'Maladie'];
+        $pertes = [];
+        $dateDebut = new DateTime('2025-01-10');
+        
+        for ($i = 0; $i < 50; $i++) {
+            $date = clone $dateDebut;
+            $date->modify("+{$i} days");
+            
+            // 1-2 pertes tous les 2-3 jours
+            if (rand(0, 2) == 0) {
+                $idVariete = rand(1, 45);
+                $quantite = rand(2, 30) + (rand(0, 9) * 0.5);
+                $motif = $motifs[array_rand($motifs)];
+                
+                $pertes[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'qte' => $quantite,
+                    'motif' => $motif,
+                    'variete' => $idVariete
+                ];
+            }
+        }
+        
         foreach ($pertes as $p) {
-            DB::table('perte')->insert([
-                'date_perte' => $p['date'],
-                'quantite_perdue' => $p['qte'],
-                'motif_perte' => $p['motif'],
-                'valeur_estimee' => 0,
-                'id_variete' => $p['variete']
-            ]);
+            try {
+                DB::table('perte')->insert([
+                    'date_perte' => $p['date'],
+                    'quantite_perdue' => $p['qte'],
+                    'motif_perte' => $p['motif'],
+                    'valeur_estimee' => 0, // Calculé par trigger
+                    'id_variete' => $p['variete']
+                ]);
+            } catch (\Exception $e) {
+                // Skip si incohérence de stock (trigger validation)
+                continue;
+            }
         }
     }
 
