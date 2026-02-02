@@ -613,13 +613,13 @@
 
                 <div class="px-6 py-4 border-t border-mbay-100 bg-gray-50 rounded-b-xl flex justify-end space-x-3 sticky bottom-0">
                     <button type="button" @click="closeShowModal()" class="btn-outline">Fermer</button>
-                    <button 
+                    {{-- <button 
                         type="button" 
                         @click="closeShowModal(); openPrixModal(showData.variete?.id_variete, showData.variete?.nom_variete, showData.prix_actuel || 0)"
                         class="btn-primary"
                     >
                         💰 Modifier le Prix
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </div>

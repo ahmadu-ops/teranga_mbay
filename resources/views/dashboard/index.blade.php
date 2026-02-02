@@ -397,15 +397,18 @@
                 datasets: [{
                     data: repartitionStock.stocks,
                     backgroundColor: [
-                        '#2E7D32',
-                        '#F9A825',
-                        '#4E342E',
-                        '#66BB6A',
-                        '#FFCA28',
-                        '#8D6E63',
-                        '#43A047',
-                        '#FFB300',
-                    ],
+                        '#1E88E5', // Bleu
+                        '#E53935', // Rouge
+                        '#43A047', // Vert
+                        '#FB8C00', // Orange
+                        '#8E24AA', // Violet
+                        '#FDD835', // Jaune
+                        '#6D4C41', // Marron
+                        '#00ACC1', // Cyan
+                        '#D81B60', // Rose
+                        '#3949AB'  // Indigo
+                        ],
+
                     borderWidth: 2,
                     borderColor: '#ffffff',
                 }]
@@ -423,7 +426,7 @@
                                 const value = context.parsed;
                                 const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                 const percentage = ((value / total) * 100).toFixed(1);
-                                return context.label + ': ' + value.toLocaleString('fr-FR') + ' kg (' + percentage + '%)';
+                                return context.label + ': ' + value.toLocaleString('fr-FR') + ' kg ';
                             }
                         }
                     }

@@ -16,7 +16,7 @@ return new class extends Migration
         }
 
         // ============================================================
-        // VARIETES (40+ variétés au lieu de 19)
+        // VARIETES (40+ variétés)
         // ============================================================
         $varietes = [
             // Choux (12 variétés)

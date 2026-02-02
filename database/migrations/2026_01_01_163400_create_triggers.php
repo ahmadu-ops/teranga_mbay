@@ -205,7 +205,7 @@ return new class extends Migration
             END;
         ");
 
-        // TRIGGER CORRIGÉ: Validation du stock avant vente
+        // Validation du stock avant vente
         DB::unprepared("
             CREATE OR REPLACE TRIGGER trg_valider_stock_vente
             BEFORE INSERT ON vente
@@ -245,7 +245,7 @@ return new class extends Migration
             END;
         ");
 
-        // TRIGGER CORRIGÉ: Validation du stock avant perte
+        // Validation du stock avant perte
         DB::unprepared("
             CREATE OR REPLACE TRIGGER trg_valider_stock_perte
             BEFORE INSERT ON perte
